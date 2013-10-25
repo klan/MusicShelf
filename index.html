@@ -21,8 +21,10 @@
         </hgroup>
       </article>
       <form action="/" name="searchform" method="post">
-        <input class="input" type="text" name="searchfield" value="Hallo" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
-        <input id="submit-button" type="submit" value="Search" />
+        <input id="search" type="text" name="searchfield" value="Hallo" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
+          <button type="submit" id="submit">
+            <div class="search-icon"></div>
+          </button>
       </form>
     </section>
     <footer id="footer"></footer>
