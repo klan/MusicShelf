@@ -1,11 +1,11 @@
 function clearField() {
-  if(document.searchform.searchfield.value == "Hallo") {
-    document.searchform.searchfield.value = "";
+  if(document.searchform.term.value == "Search") {
+    document.searchform.term.value = "";
   }
 }
 
 function fillField() {
-  if(document.searchform.searchfield.value == "") {
-    document.searchform.searchfield.value = "Hallo";
+  if(document.searchform.term.value == "") {
+    document.searchform.term.value = "Search";
   }
 }
