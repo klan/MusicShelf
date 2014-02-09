@@ -36,3 +36,15 @@ button#submit > div.search-icon {
 button#submit:hover {
   opacity: 1;
 }
+
+ul#result {
+  clear: both;
+}
+
+ul#result li {
+  list-style: none;
+}
+
+ul#result li div.entry a {
+  display: block;
+}

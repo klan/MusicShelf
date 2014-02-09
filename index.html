@@ -7,8 +7,9 @@
 
     <link rel="stylesheet" href="css/main.css" type="text/css">
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="js/fillclear.js" type="text/javascript"></script>
+    <script src="js/search.js" type="text/javascript"></script>
   </head>
 
   <body>
@@ -20,13 +21,15 @@
           <h3>Keep track of your music collection using iTunes Search API</h3>
         </hgroup>
       </article>
-      <form action="/" name="searchform" method="post">
-        <input id="search" type="text" name="searchfield" value="Hallo" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
+      <form action="" name="searchform" id="searchform" method="post">
+        <input id="search" type="text" name="term" value="Search" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
           <button type="submit" id="submit">
             <div class="search-icon"></div>
           </button>
       </form>
     </section>
+    <ul id="result">
+    </ul>
     <footer id="footer"></footer>
   </body>
 </html>
