@@ -12,6 +12,8 @@ jQuery(document).ready(function ($) {
       $.ajax({
         type: "POST",
         url: $url,
+        cache: false,
+        timeout: 5000,
         data: {term:$query, media:"music", entity:"musicArtist,album"},
         beforeSend: function(xhr) {
 
@@ -59,10 +61,10 @@ jQuery(document).ready(function ($) {
         });
       }).fail(function(json) {
         // appending to result element
-        $('#result').append('<h1>FAIL</h1>');
+        $('#result').append('<strong>Search failed, try again.</strong>');
       }).always(function() {
 
-        // Display loader icon.
+        // Hide loader icon.
         $('#loader').hide();
 
       });
