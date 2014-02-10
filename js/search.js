@@ -5,6 +5,7 @@ jQuery(document).ready(function ($) {
 
     // setting variables
     $query = $("#search").val();
+    $parameter = $('input[name=parameter]:checked', '#searchform').val();
     $url = 'http://itunes.apple.com/search';
 
     // validation
@@ -12,9 +13,8 @@ jQuery(document).ready(function ($) {
       $.ajax({
         type: "POST",
         url: $url,
-        cache: false,
         timeout: 5000,
-        data: {term:$query, media:"music", entity:"musicArtist,album"},
+        data: {term:$query, media:"music", entity:$parameter},
         beforeSend: function(xhr) {
 
           // Display loader icon.

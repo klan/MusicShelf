@@ -23,9 +23,14 @@
       </article>
       <form action="" name="searchform" id="searchform" method="post">
         <input id="search" type="text" name="term" value="Search" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
-          <button type="submit" id="submit">
-            <div class="search-icon"></div>
-          </button>
+        <button type="submit" id="submit">
+          <div class="search-icon"></div>
+        </button>
+        <div id="search_parameters">
+          <input type="radio" name="parameter" value="musicArtist,album" checked>Both
+          <input type="radio" name="parameter" value="musicArtist">Artists
+          <input type="radio" name="parameter" value="album">Albums
+        </div>
       </form>
     </section>
     <ul id="result">

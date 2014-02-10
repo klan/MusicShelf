@@ -37,6 +37,10 @@ button#submit:hover {
   opacity: 1;
 }
 
+#search_parameters {
+  clear: both;
+}
+
 ul#result {
   clear: both;
 }
