@@ -17,7 +17,19 @@ jQuery(document).ready(function ($) {
         data: {term:$query, media:"music", entity:$parameter},
         beforeSend: function(xhr) {
 
-          // Display loader icon.
+          // Get loading icon.
+          var dom_ajax_loader = $('#loader_icon');
+
+          // Create new offscreen image.
+          var ajax_loader = new Image();
+          ajax_loader.src = dom_ajax_loader.attr('src');
+
+          // Place loader icon screen center.
+          $('#loader_icon').css({
+            left: (($(window).width() - ajax_loader.width) / 2),
+            top: (($(window).height() - ajax_loader.height) / 2)
+          });
+          // Display icon.
           $('#loader').fadeIn(100);
 
         },
