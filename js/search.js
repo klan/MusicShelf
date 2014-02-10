@@ -13,6 +13,12 @@ jQuery(document).ready(function ($) {
         type: "POST",
         url: $url,
         data: {term:$query, media:"music", entity:"musicArtist,album"},
+        beforeSend: function(xhr) {
+
+          // Display loader icon.
+          $('#loader').fadeIn(100);
+
+        },
         dataType: "jsonp",
       }).done(function(json) {
         // console.log(json.results);
@@ -54,6 +60,11 @@ jQuery(document).ready(function ($) {
       }).fail(function(json) {
         // appending to result element
         $('#result').append('<h1>FAIL</h1>');
+      }).always(function() {
+
+        // Display loader icon.
+        $('#loader').hide();
+
       });
     }
   });

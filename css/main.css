@@ -48,3 +48,7 @@ ul#result li {
 ul#result li div.entry a {
   display: block;
 }
+
+div#loader {
+  display: none;
+}
