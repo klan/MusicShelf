@@ -1,12 +1,15 @@
-jQuery(document).ready(function ($) {
+jQuery(function ($) {
   // on submit
   $('#searchform').submit(function(event) {
     event.preventDefault();
 
     // setting variables
     $query = $("#search").val();
-    $parameter = $('input[name=parameter]:checked', '#searchform').val();
     $url = 'http://itunes.apple.com/search';
+
+    $parameters = $('input[name=parameters]:checked', '#searchform');
+    $entities = $parameters.attr('data-entities');
+    $attributes = $parameters.attr('data-attributes');
 
     // validation
     if ($query.trim() && $query != 'Search') {
@@ -14,9 +17,9 @@ jQuery(document).ready(function ($) {
         type: "POST",
         url: $url,
         timeout: 5000,
-        data: {term:$query, media:"music", entity:$parameter},
+        dataType: "jsonp",
+        data: JSON.parse('{ "term":"'+$query+'", "media":"music", "entity":"'+$entities+'", "attributes":"'+$attributes+'" }'),
         beforeSend: function(xhr) {
-
           // Get loading icon.
           var dom_ajax_loader = $('#loader_icon');
 
@@ -31,9 +34,7 @@ jQuery(document).ready(function ($) {
           });
           // Display icon.
           $('#loader').fadeIn(100);
-
         },
-        dataType: "jsonp",
       }).done(function(json) {
         // console.log(json.results);
         // empty result element
@@ -75,10 +76,8 @@ jQuery(document).ready(function ($) {
         // appending to result element
         $('#result').append('<strong>Search failed, try again.</strong>');
       }).always(function() {
-
         // Hide loader icon.
         $('#loader').hide();
-
       });
     }
   });

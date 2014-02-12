@@ -27,9 +27,9 @@
           <div class="search-icon"></div>
         </button>
         <div id="search_parameters">
-          <input type="radio" name="parameter" value="musicArtist,album" checked>Both
-          <input type="radio" name="parameter" value="musicArtist">Artists
-          <input type="radio" name="parameter" value="album">Albums
+          <input type="radio" name="parameters" data-entities="musicArtist,album" data-attributes="artistTerm,albumTerm" checked>Both
+          <input type="radio" name="parameters" data-entities="musicArtist" data-attributes="artistTerm">Artists
+          <input type="radio" name="parameters" data-entities="album" data-attributes="albumTerm">Albums
         </div>
       </form>
     </section>
