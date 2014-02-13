@@ -49,7 +49,8 @@ ul#result li {
   list-style: none;
 }
 
-ul#result li div.entry a {
+ul#result li div.entry a,
+ul#result li div.details a {
   display: block;
 }
 

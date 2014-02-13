@@ -40,32 +40,61 @@ jQuery(function ($) {
         // empty result element
         $('#result').empty();
         $.each(json.results, function(key, value) {
-          // creating list element
+          // CREATING LIST ELEMENT
           $li = $('<li></li>');
+          $li.addClass('element_'+key);
 
-          // creating entry
+          // CREATING ENTRY
           $entry = $('<div></div>');
           $entry.addClass('entry');
 
           // artist name
           $artistName = $('<a></a>');
+          $artistName.addClass('artist-name');
           $artistName.attr('href', value.artistLinkUrl || value.artistViewUrl);
           $artistName.html(value.artistName);
 
           // collection name
           $collectionName = $('<a></a>');
+          $collectionName.addClass('collection-name');
           $collectionName.attr('href', value.collectionViewUrl);
           $collectionName.html(value.collectionName);
 
           // appending to entry
           $entry.append($artistName, $collectionName);
 
-          // creating details
+          // CREATING DETAILS
           $details = $('<div></div>');
           $details.addClass('details');
 
+          // CREATING TRACK
+          $track = $('<a></a>');
+          $track.addClass('track');
+
+          if (value.trackNumber || value.trackName) {
+
+            // track number
+            $trackNumber = $('<span></span>');
+            $trackNumber.addClass('number');
+            $trackNumber.html(value.trackNumber+' out of '+value.trackCount+' - ');
+
+            // track name
+            $trackName = $('<span></span>');
+            $trackName.addClass('name');
+            $trackName.html(value.trackName);
+
+            // appending to track
+            $track.append($trackNumber, $trackName);
+          }
+
           // wrapper type
-          $details.html('wrapperType: ' + value.wrapperType);
+          $type = $('<span></span>');
+          $type.addClass('type');
+          $type.css('fontWeight', 'bold');
+          $type.html(value.wrapperType);
+
+          // appending to details
+          $details.append($track, $type);
 
           // appending to list element
           $li.append($entry, $details);
