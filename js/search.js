@@ -1,111 +1,87 @@
-jQuery(function ($) {
-  // on submit
+jQuery(function($) {
   $('#searchform').submit(function(event) {
     event.preventDefault();
 
-    // setting variables
-    $query = $("#search").val();
-    $url = 'http://itunes.apple.com/search';
+    var query = $("#search").val();
+    var url = 'http://itunes.apple.com/search';
+    var parameters = $('input[name=parameters]:checked', '#searchform');
+    var entities = parameters.attr('data-entities');
+    var attributes = parameters.attr('data-attributes');
 
-    $parameters = $('input[name=parameters]:checked', '#searchform');
-    $entities = $parameters.attr('data-entities');
-    $attributes = $parameters.attr('data-attributes');
-
-    // validation
-    if ($query.trim() && $query != 'Search') {
+    if (query.trim() && query != 'Search') {
       $.ajax({
         type: "POST",
-        url: $url,
+        url: url,
         timeout: 5000,
         dataType: "jsonp",
-        data: JSON.parse('{ "term":"'+$query+'", "media":"music", "entity":"'+$entities+'", "attributes":"'+$attributes+'" }'),
+        data: JSON.parse('{ "term":"'+query+'", "media":"music", "entity":"'+entities+'", "attributes":"'+attributes+'" }'),
         beforeSend: function(xhr) {
-          // Get loading icon.
+          // get loading icon
           var dom_ajax_loader = $('#loader_icon');
 
-          // Create new offscreen image.
+          // create new offscreen image
           var ajax_loader = new Image();
           ajax_loader.src = dom_ajax_loader.attr('src');
 
-          // Place loader icon screen center.
+          // place loader icon screen center
           $('#loader_icon').css({
             left: (($(window).width() - ajax_loader.width) / 2),
             top: (($(window).height() - ajax_loader.height) / 2)
           });
-          // Display icon.
+          // display icon
           $('#loader').fadeIn(100);
         },
       }).done(function(json) {
-        // console.log(json.results);
-        // empty result element
+        console.log('result: %O', json.results);
         $('#result').empty();
-        $.each(json.results, function(key, value) {
-          // CREATING LIST ELEMENT
-          $li = $('<li></li>');
-          $li.addClass('element_'+key);
 
-          // CREATING ENTRY
-          $entry = $('<div></div>');
-          $entry.addClass('entry');
+        $.each(json.results, function(key, result) {
+          var li = $('<li></li>').addClass('element_'+key);
+          var entry = $('<div></div>').addClass('entry');
 
           // artist name
-          $artistName = $('<a></a>');
-          $artistName.addClass('artist-name');
-          $artistName.attr('href', value.artistLinkUrl || value.artistViewUrl);
-          $artistName.html(value.artistName);
+          var artistName = $('<a></a>').addClass('artist-name');
+          artistName.attr('href', result.artistLinkUrl || result.artistViewUrl);
+          artistName.text(result.artistName);
 
           // collection name
-          $collectionName = $('<a></a>');
-          $collectionName.addClass('collection-name');
-          $collectionName.attr('href', value.collectionViewUrl);
-          $collectionName.html(value.collectionName);
+          var collectionName = $('<a></a>').addClass('collection-name');
+          collectionName.attr('href', result.collectionViewUrl);
+          collectionName.text(result.collectionName);
 
-          // appending to entry
-          $entry.append($artistName, $collectionName);
+          entry.append(artistName, collectionName);
 
-          // CREATING DETAILS
-          $details = $('<div></div>');
-          $details.addClass('details');
+          var details = $('<div></div>').addClass('details');
+          var track = $('<a></a>').addClass('track');
 
-          // CREATING TRACK
-          $track = $('<a></a>');
-          $track.addClass('track');
-
-          if (value.trackNumber || value.trackName) {
-
+          if (result.trackNumber || result.trackName) {
             // track number
-            $trackNumber = $('<span></span>');
-            $trackNumber.addClass('number');
-            $trackNumber.html(value.trackNumber+' out of '+value.trackCount+' - ');
+            var trackNumber = $('<span></span>').addClass('number');
+            trackNumber.text(result.trackNumber+' out of '+result.trackCount+' - ');
 
             // track name
-            $trackName = $('<span></span>');
-            $trackName.addClass('name');
-            $trackName.html(value.trackName);
+            var trackName = $('<span></span>').addClass('name');
+            trackName.text(result.trackName);
 
-            // appending to track
-            $track.append($trackNumber, $trackName);
+            track.append(trackNumber, trackName);
           }
 
           // wrapper type
-          $type = $('<span></span>');
-          $type.addClass('type');
-          $type.css('fontWeight', 'bold');
-          $type.html(value.wrapperType);
+          var type = $('<span></span>').addClass('type');
+          // type.css('fontWeight', 'bold');
+          type.text(result.wrapperType);
 
-          // appending to details
-          $details.append($track, $type);
-
-          // appending to list element
-          $li.append($entry, $details);
-          // appending to result element
-          $('#result').append($li);
+          details.append(track, type);
+          li.append(entry, details);
+          $('#result').append(li);
         });
       }).fail(function(json) {
-        // appending to result element
-        $('#result').append('<strong>Search failed, try again.</strong>');
+        var li = $('<li></li>').addClass('element_'+key);
+
+        li.append('<span>Failed: '+json+'</span>');
+        $('#result').append(li);
       }).always(function() {
-        // Hide loader icon.
+        // hide loader icon
         $('#loader').hide();
       });
     }
