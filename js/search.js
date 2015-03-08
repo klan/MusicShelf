@@ -12,20 +12,18 @@ jQuery(function($) {
     var entities = parameters.attr('data-entities');
     var attributes = parameters.attr('data-attributes');
     var search_data = {
-      "term" : query,
-      "media" : "music",
-      "entity" : entities,
-      "attributes" : attributes
+      'term': query,
+      'media': 'music',
+      'entity': entities,
+      'attributes': attributes
     };
 
     if (query.trim() && query != 'Search') {
-      $(window).getResults({
-        'type': 'GET',
+      var search = new iTunesSearchAPI().getResult({
         'url': search_url,
-        'timeout': 5000,
-        'datatype': 'jsonp',
-        'data': search_data
-      });
+        'data': search_data,
+        'resultType': 'search'
+      }).formatResult();
     }
   });
 
@@ -39,57 +37,87 @@ jQuery(function($) {
   // };
 
   /*
-   * jQuery extend
+   * Classes & Methods
    */
-  $.fn.extend({
-    getResults: function(settings) {
-      var config = {
-          'type': 'GET',
-          'url': '',
-          'timeout': 5000,
-          'datatype': 'jsonp',
-          'data': ''
-      };
+  var iTunesSearchAPI = function() {
+    this.name = 'iTunesSearchAPI';
+    this.settings = {};
+    this.results = {};
+  };
 
-      if (settings) {
-        $.extend(config, settings);
-        console.log(config);
+  iTunesSearchAPI.prototype.getResult = function(settings) {
+    var config = {
+      'type': 'GET',
+      'url': '',
+      'timeout': 5000,
+      'dataType': 'jsonp',
+      'data': '',
+      'resultType': ''
+    };
 
-        $.ajax({
-          type: config.type,
-          url: config.url,
-          timeout: config.timeout,
-          dataType: config.datatype,
-          data: config.data,
-          beforeSend: function(xhr) {
-            // get loading icon
-            var dom_ajax_loader = $('#loader_icon');
+    var self = this;
 
-            // create new offscreen image
-            var ajax_loader = new Image();
-            ajax_loader.src = dom_ajax_loader.attr('src');
+    if (settings) {
+      $.extend(config, settings);
+      self.settings = config;
 
-            // place loader icon screen center
-            $('#loader_icon').css({
-              left: (($(window).width() - ajax_loader.width) / 2),
-              top: (($(window).height() - ajax_loader.height) / 2)
-            });
-            // display icon
-            $('#loader').fadeIn(100);
-          },
-        }).done(function(json) {
-          // console.log('result: %O', json.results);
+      window.resultCall = $.ajax({
+        type: config.type,
+        url: config.url,
+        timeout: config.timeout,
+        dataType: config.dataType,
+        data: config.data,
+        beforeSend: function(xhr) {
+          // get loading icon
+          var dom_ajax_loader = $('#loader_icon');
+
+          // create new offscreen image
+          var ajax_loader = new Image();
+          ajax_loader.src = dom_ajax_loader.attr('src');
+
+          // place loader icon screen center
+          $('#loader_icon').css({
+            left: (($(window).width() - ajax_loader.width) / 2),
+            top: (($(window).height() - ajax_loader.height) / 2)
+          });
+          // display icon
+          $('#loader').fadeIn(100);
+        },
+      }).done(function(json) {
+        self.results = json.results;
+        // console.log(self);
+      }).fail(function(json) {
+        console.log('fail: %O', json);
+      }).always(function() {
+        // hide loader icon
+        $('#loader').hide();
+      });
+    } else {
+      console.log('missing settings!');
+    }
+    return self;
+  };
+
+  iTunesSearchAPI.prototype.formatResult = function() {
+    var self = this;
+
+    // wait for call to finish and for self.results to be populated
+    $.when(window.resultCall).done(function() {
+      console.log('results length: %i', self.results.length);
+
+      switch (self.settings.resultType) {
+        case 'search':
           $('#result').empty();
 
-          $.each(json.results, function(key, result) {
+          $.each(self.results, function(key, result) {
             var li = $('<li></li>').addClass('element_'+key);
             var entry = $('<div></div>').addClass('entry');
             entry.attr('data-artist-id', result.artistId);
 
             // artist name
             var artistName = $('<a></a>').addClass('artist-name');
-            artistName.attr('href', result.artistLinkUrl || result.artistViewUrl);
-            // artistName.attr('href', 'https://itunes.apple.com/lookup?id='+result.artistId);
+            // artistName.attr('href', result.artistLinkUrl || result.artistViewUrl);
+            artistName.attr('href', 'https://itunes.apple.com/lookup?id='+result.artistId+'&entity=album');
             artistName.text(result.artistName);
 
             // collection name
@@ -122,24 +150,19 @@ jQuery(function($) {
             li.append(entry, details);
             $('#result').append(li);
           });
-        }).fail(function(json) {
-          // console.log('fail: %O', json);
-          var li = $('<li></li>').addClass('element_0 error');
+          break;
+        case 'lookup':
+          // close overlays (in case any is open), build album list, open new overlay
+          $.each(self.results, function(key, result) {
+            var li = $('<li></li>').addClass('element_'+key);
+            var entry = $('<div></div>').addClass('entry');
 
-          li.append('<span>Failed: '+json+'</span>');
-          $('#result').append(li);
-        }).always(function() {
-          // hide loader icon
-          $('#loader').hide();
-        });
-      } else {
-        // console.log('missing settings!');
-        var li = $('<li></li>').addClass('element_0 error');
-
-        li.append('<span>Missing settings!</span>');
-        $('#result').append(li);
+            li.append(entry);
+            $('#result').append(li);
+          });
+          break;
       }
-    }
-  });
+    });
+  };
 
 });
