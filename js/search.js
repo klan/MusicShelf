@@ -43,6 +43,7 @@ jQuery(function($) {
     this.name = 'iTunesSearchAPI';
     this.settings = {};
     this.results = {};
+    this.errors = {};
   };
 
   iTunesSearchAPI.prototype.getResult = function(settings) {
@@ -84,17 +85,20 @@ jQuery(function($) {
           $('#loader').fadeIn(100);
         },
       }).done(function(json) {
+        // setting results
         self.results = json.results;
-        // console.log(self);
-      }).fail(function(json) {
-        console.log('fail: %O', json);
+      }).fail(function(jqXHR, textStatus) {
+        // setting errors
+        self.errors = {
+          'type': 'call_failed',
+          'status': textStatus
+        };
       }).always(function() {
         // hide loader icon
         $('#loader').hide();
       });
-    } else {
-      console.log('missing settings!');
     }
+
     return self;
   };
 
@@ -103,7 +107,7 @@ jQuery(function($) {
 
     // wait for call to finish and for self.results to be populated
     $.when(window.resultCall).done(function() {
-      console.log('results length: %i', self.results.length);
+      console.log('done: %O', self);
 
       switch (self.settings.resultType) {
         case 'search':
@@ -162,6 +166,10 @@ jQuery(function($) {
           });
           break;
       }
+    });
+
+    $.when(window.resultCall).fail(function() {
+      console.log('fail: %O', self);
     });
   };
 
