@@ -3,12 +3,12 @@ jQuery(function($) {
   /*
    * Search
    */
-  $('#searchform').submit(function(event) {
+  $('.search_form').submit(function(event) {
     event.preventDefault();
 
-    var query = $("#search").val();
+    var query = $(".search").val();
     var search_url = 'https://itunes.apple.com/search';
-    var parameters = $('input[name=parameters]:checked', '#searchform');
+    var parameters = $('input[name=parameters]:checked', '.search_form');
     var entities = parameters.attr('data-entities');
     var attributes = parameters.attr('data-attributes');
     var search_data = {
@@ -70,17 +70,18 @@ jQuery(function($) {
         data: config.data,
         beforeSend: function(xhr) {
           // get loading icon
-          var dom_ajax_loader = $('#loader_icon');
+          var dom_ajax_loader = $('.loader_icon');
 
           // create new offscreen image
           var ajax_loader = new Image();
           ajax_loader.src = dom_ajax_loader.attr('src');
 
           // place loader icon screen center
-          $('#loader_icon').css({
+          dom_ajax_loader.css({
             left: (($(window).width() - ajax_loader.width) / 2),
             top: (($(window).height() - ajax_loader.height) / 2)
           });
+
           // display icon
           $('#loader').fadeIn(100);
         },
@@ -111,7 +112,7 @@ jQuery(function($) {
 
       switch (self.settings.resultType) {
         case 'search':
-          $('#result').empty();
+          $('.search_result').empty();
 
           $.each(self.results, function(key, result) {
             var li = $('<li></li>').addClass('element_'+key);
@@ -152,7 +153,7 @@ jQuery(function($) {
 
             details.append(track, type);
             li.append(entry, details);
-            $('#result').append(li);
+            $('.search_result').append(li);
           });
           break;
         case 'lookup':
@@ -162,7 +163,7 @@ jQuery(function($) {
             var entry = $('<div></div>').addClass('entry');
 
             li.append(entry);
-            $('#result').append(li);
+            $('.search_result').append(li);
           });
           break;
       }

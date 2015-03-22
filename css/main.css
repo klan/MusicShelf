@@ -3,7 +3,10 @@ body {
   padding: 0;
 }
 
-input#search {
+ /*
+  * Form
+  */
+input.search {
   width: 300px;
   font-size: 20px;
   padding: 5px;
@@ -17,7 +20,7 @@ input#search {
   float: left;
 }
 
-button#submit {
+button.submit {
   width: 30px;
   height: 35px;
   opacity: .6;
@@ -26,33 +29,62 @@ button#submit {
   float: left;
 }
 
-button#submit > div.search-icon {
+button.submit > div.search_icon {
   width: 14px;
   height: 15px;
   background: url(../img/search.png) no-repeat;
 }
 
-button#submit:hover {
+button.submit:hover {
   opacity: 1;
 }
 
-#search_parameters {
+div.search_parameters {
   clear: both;
 }
 
-ul#result {
+/*
+ * Columns
+ */
+div#column01 {
+  position: relative;
+  height: 100%;
+}
+
+div#column02 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+}
+
+div#handle {
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  background-color: #444;
+  cursor: ew-resize;
+}
+
+/*
+ * Search results
+ */
+ul.search_result {
   clear: both;
 }
 
-ul#result li {
+ul.search_result li {
   list-style: none;
 }
 
-ul#result li div.entry a,
-ul#result li div.details a {
+ul.search_result li div.entry a,
+ul.search_result li div.details a {
   display: block;
 }
 
+/*
+ * Loader
+ */
 div#loader {
   display: none;
   width: 100%;
