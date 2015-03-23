@@ -3,6 +3,11 @@ body {
   padding: 0;
 }
 
+ul {
+  margin: 0;
+  padding: 10px;
+}
+
  /*
   * Form
   */
@@ -46,16 +51,16 @@ div.search_parameters {
 /*
  * Columns
  */
-div#column01 {
-  position: relative;
-  height: 100%;
+div#left,
+div#right {
+  position: absolute;
+  top: 160px;
+  bottom: 0;
+  overflow: auto;
 }
 
-div#column02 {
-  position: absolute;
-  top: 0;
+div#right {
   right: 0;
-  height: 100%;
 }
 
 div#handle {
@@ -69,10 +74,6 @@ div#handle {
 /*
  * Search results
  */
-ul.search_result {
-  clear: both;
-}
-
 ul.search_result li {
   list-style: none;
 }

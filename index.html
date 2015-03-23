@@ -18,29 +18,33 @@
     <header id="header">
       <h2>MusicShelf</h2>
       <h3>Keep track of your music collection using iTunes Search API</h3>
+      <form action="" name="searchform" class="search_form" method="post">
+        <input class="search" type="text" name="term" value="Search" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
+        <button type="submit" class="submit">
+          <div class="search_icon"></div>
+        </button>
+        <div class="search_parameters">
+          <input type="radio" name="parameters" data-entities="musicArtist,album,song" data-attributes="artistTerm,albumTerm,songTerm">All
+          <input type="radio" name="parameters" data-entities="album" data-attributes="albumTerm" checked>Albums
+          <input type="radio" name="parameters" data-entities="musicArtist" data-attributes="artistTerm">Artists
+          <input type="radio" name="parameters" data-entities="song" data-attributes="songTerm">Song
+        </div>
+      </form>
     </header>
 
-    <div id ="column01" style="min-width: 350px;">
-      <section class="content">
-        <form action="" name="searchform" class="search_form" method="post">
-          <input class="search" type="text" name="term" value="Search" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
-          <button type="submit" class="submit">
-            <div class="search_icon"></div>
-          </button>
-          <div class="search_parameters">
-            <input type="radio" name="parameters" data-entities="musicArtist,album,song" data-attributes="artistTerm,albumTerm,songTerm">All
-            <input type="radio" name="parameters" data-entities="album" data-attributes="albumTerm" checked>Albums
-            <input type="radio" name="parameters" data-entities="musicArtist" data-attributes="artistTerm">Artists
-            <input type="radio" name="parameters" data-entities="song" data-attributes="songTerm">Song
-          </div>
-        </form>
-      </section>
-      <ul class="search_result"></ul>
-    </div>
+    <div id="content">
+      <div id="left" style="min-width: 350px;">
+        <div class="inner">
+          <ul class="search_result"></ul>
+        </div>
+      </div>
 
-    <div id="column02" style="min-width: 350px;">
-      <div id="handle"></div>
-      <ul class="lookup_result"></ul>
+      <div id="right" style="min-width: 350px;">
+        <div class="inner">
+          <div id="handle"></div>
+          <ul class="lookup_result"></ul>
+        </div>
+      </div>
     </div>
 
     <!-- loader -->
