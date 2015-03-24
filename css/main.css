@@ -48,6 +48,23 @@ div.search_parameters {
   clear: both;
 }
 
+div.search_parameters > input {
+  display: none;
+}
+
+div.search_parameters > input:checked + label {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+div.search_parameters > label {
+  cursor: pointer;
+}
+
+div.search_parameters > label:hover {
+  text-decoration: underline;
+}
+
 /*
  * Columns
  */
@@ -74,6 +91,11 @@ div#handle {
 /*
  * Search results
  */
+ul.search_result {
+  position: relative;
+  z-index: 5;
+}
+
 ul.search_result li {
   list-style: none;
 }
@@ -94,6 +116,7 @@ div#loader {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 10;
 }
 
 div#loader img {

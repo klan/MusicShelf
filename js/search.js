@@ -25,6 +25,26 @@ jQuery(function($) {
         'resultType': 'search'
       }).formatResult();
     }
+
+    $('input[name=parameters]').change(function() {
+      // reset vars
+      parameters = $('input[name=parameters]:checked', '.search_form');
+      entities = parameters.attr('data-entities');
+      attributes = parameters.attr('data-attributes');
+      search_data = {
+        'term': query,
+        'media': 'music',
+        'entity': entities,
+        'attributes': attributes
+      };
+
+      // redo call
+      var search = new iTunesSearchAPI().getResult({
+        'url': search_url,
+        'data': search_data,
+        'resultType': 'search'
+      }).formatResult();
+    });
   });
 
   /*
@@ -78,8 +98,8 @@ jQuery(function($) {
 
           // place loader icon screen center
           dom_ajax_loader.css({
-            left: (($(window).width() - ajax_loader.width) / 2),
-            top: (($(window).height() - ajax_loader.height) / 2)
+            left: (($('#left').width() - ajax_loader.width) / 2),
+            top: (($('#left').height() - ajax_loader.height) / 2)
           });
 
           // display icon

@@ -24,10 +24,14 @@
           <div class="search_icon"></div>
         </button>
         <div class="search_parameters">
-          <input type="radio" name="parameters" data-entities="musicArtist,album,song" data-attributes="artistTerm,albumTerm,songTerm">All
-          <input type="radio" name="parameters" data-entities="album" data-attributes="albumTerm" checked>Albums
-          <input type="radio" name="parameters" data-entities="musicArtist" data-attributes="artistTerm">Artists
-          <input type="radio" name="parameters" data-entities="song" data-attributes="songTerm">Song
+          <input id="all" type="radio" name="parameters" data-entities="musicArtist,album,song" data-attributes="artistTerm,albumTerm,songTerm">
+          <label for="all" style="">All</label>
+          <input id="albums" type="radio" name="parameters" data-entities="album" data-attributes="albumTerm" checked>
+          <label for="albums" style="">Albums</label>
+          <input id="artists" type="radio" name="parameters" data-entities="musicArtist" data-attributes="artistTerm">
+          <label for="artists" style="">Artists</label>
+          <input id="song" type="radio" name="parameters" data-entities="song" data-attributes="songTerm">
+          <label for="song" style="">Song</label>
         </div>
       </form>
     </header>
@@ -37,6 +41,9 @@
         <div class="inner">
           <ul class="search_result"></ul>
         </div>
+
+        <!-- loader -->
+        <div id="loader"><img class="loader_icon" src="img/ajax-loader.gif" /></div>
       </div>
 
       <div id="right" style="min-width: 350px;">
@@ -46,9 +53,6 @@
         </div>
       </div>
     </div>
-
-    <!-- loader -->
-    <div id="loader"><img class="loader_icon" src="img/ajax-loader.gif" /></div>
   </body>
 
 </html>
