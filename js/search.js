@@ -8,7 +8,7 @@ jQuery(function($) {
 
     var query = $(".search").val();
     var search_url = 'https://itunes.apple.com/search';
-    var parameters = $('input[name=parameters]:checked', '.search_form');
+    var parameters = $('input[name=parameters]:checked');
     var entities = parameters.attr('data-entities');
     var attributes = parameters.attr('data-attributes');
     var search_data = {
@@ -28,7 +28,7 @@ jQuery(function($) {
 
     $('input[name=parameters]').change(function() {
       // reset vars
-      parameters = $('input[name=parameters]:checked', '.search_form');
+      parameters = $('input[name=parameters]:checked');
       entities = parameters.attr('data-entities');
       attributes = parameters.attr('data-attributes');
       search_data = {
@@ -104,6 +104,8 @@ jQuery(function($) {
 
           // display icon
           $('#loader').fadeIn(100);
+          // freeze scroll
+          $('#left').css({ overflow: 'hidden' });
         },
       }).done(function(json) {
         // setting results
@@ -117,6 +119,8 @@ jQuery(function($) {
       }).always(function() {
         // hide loader icon
         $('#loader').hide();
+        // unfreeze scroll
+        $('#left').css({ overflow: 'auto' });
       });
     }
 
@@ -153,12 +157,12 @@ jQuery(function($) {
             entry.append(artistName, collectionName);
 
             var details = $('<div></div>').addClass('details');
-            var track = $('<a></a>').addClass('track');
+            var track = $('<span></span>').addClass('track');
 
             if (result.trackNumber || result.trackName) {
               // track number
               var trackNumber = $('<span></span>').addClass('number');
-              trackNumber.text(result.trackNumber+' out of '+result.trackCount+' - ');
+              trackNumber.text(result.trackNumber+' out of '+result.trackCount);
 
               // track name
               var trackName = $('<span></span>').addClass('name');
