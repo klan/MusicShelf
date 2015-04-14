@@ -16,42 +16,54 @@
 
   <body>
     <header id="header">
-      <h2>MusicShelf</h2>
-      <h3>Keep track of your music collection using iTunes Search API</h3>
-      <form action="" name="searchform" class="search_form" method="post">
-        <input class="search" type="text" name="term" value="Search" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
-        <button type="submit" class="submit">
-          <div class="search_icon"></div>
-        </button>
-        <div class="search_parameters">
-          <input id="all" type="radio" name="parameters" data-entities="musicArtist,album,song" data-attributes="artistTerm,albumTerm,songTerm">
-          <label for="all" style="">All</label>
-          <input id="albums" type="radio" name="parameters" data-entities="album" data-attributes="albumTerm" checked>
-          <label for="albums" style="">Albums</label>
-          <input id="artists" type="radio" name="parameters" data-entities="musicArtist" data-attributes="artistTerm">
-          <label for="artists" style="">Artists</label>
-          <input id="song" type="radio" name="parameters" data-entities="song" data-attributes="songTerm">
-          <label for="song" style="">Song</label>
+      <div id="topbar">
+        <div class="wrap-container">
+          <h3 class="title">MusicShelf</h3>
+          <h4 class="subtitle">iTunes Search API</h4>
         </div>
-      </form>
+
+        <div class="search_container">
+          <form action="" name="searchform" class="search_form" method="post">
+            <input class="search" type="text" name="term" value="Search" size="20" autocomplete="off" onfocus="clearField()" onblur="fillField()" />
+            <button type="submit" class="submit">
+              <div class="search_icon"></div>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div id="bottombar">
+        <div class="search_parameters">
+          <form name="searchparameters">
+            <input id="all" type="radio" name="parameters" data-entities="musicArtist,album,song" data-attributes="artistTerm,albumTerm,songTerm" />
+            <label for="all" style="">All</label>
+            <input id="albums" type="radio" name="parameters" data-entities="album" data-attributes="albumTerm" checked />
+            <label for="albums" style="">Albums</label>
+            <input id="artists" type="radio" name="parameters" data-entities="musicArtist" data-attributes="artistTerm" />
+            <label for="artists" style="">Artists</label>
+            <input id="song" type="radio" name="parameters" data-entities="song" data-attributes="songTerm" />
+            <label for="song" style="">Song</label>
+          </form>
+        </div>
+      </div>
     </header>
 
-    <div id="content">
-      <div id="left" style="min-width: 350px;">
-        <div class="inner">
-          <ul class="search_result"></ul>
-        </div>
-
-        <!-- loader -->
-        <div id="loader"><img class="loader_icon" src="img/ajax-loader.gif" /></div>
+    <div id="left" style="min-width: 350px;">
+      <div class="inner">
+        <ul class="search_result"></ul>
       </div>
 
-      <div id="right" style="min-width: 350px;">
-        <div class="inner">
-          <div id="handle"></div>
-          <ul class="lookup_result"></ul>
-        </div>
+      <!-- loader -->
+      <div id="loader"><img class="loader_icon" src="img/ajax-loader.gif" /></div>
+    </div>
+
+    <div id="right" style="min-width: 350px;">
+      <div class="inner">
+        <ul class="lookup_result"></ul>
       </div>
+
+      <!-- handle -->
+      <div id="handle"></div>
     </div>
   </body>
 
