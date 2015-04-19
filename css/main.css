@@ -5,11 +5,6 @@ body {
   background: rgb(220, 220, 220);
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-}
-
 h3 {
   margin: 0;
 }
@@ -24,8 +19,7 @@ h3 {
 div#topbar .title,
 div#topbar .subtitle,
 div.search_parameters label,
-ul.search_result li div.entry a,
-ul.search_result li div.details span {
+div.search_result > div.entry {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -119,7 +113,7 @@ div.search_parameters label {
 }
 
 /*
- * Columns
+ * Left / right containers
  */
 div#left,
 div#right {
@@ -155,24 +149,92 @@ div#handle {
 /*
  * Search results
  */
-ul.search_result {
+div.search_result {
   position: relative;
+  width: 100%;
   z-index: 5;
 }
 
-ul.search_result li {
-  list-style: none;
+div.search_result > div.entry,
+div.search_result >.entry > div {
+  display: -moz-box;
+  display: -webkit-box;
+  display: box;
 }
 
-ul.search_result li:nth-child(odd) {
+div.search_result > div.entry:nth-child(odd) {
   background: rgb(230, 230, 230)
 }
 
-ul.search_result li div.entry a,
-ul.search_result li div.details span {
+div.search_result > div.entry a,
+div.search_result > div.entry span {
   display: block;
   color: rgb(85, 85, 85);
   text-decoration: none;
+}
+
+/*
+ * Columns
+ */
+div.search_result.all > div.entry > .artist-name,
+div.search_result.all > div.entry > .collection-name,
+div.search_result.all > div.entry > .track-name,
+div.search_result.all > div.entry > .track-number {
+  width: 25%;
+}
+
+div.search_result.albums > div.entry > .collection-name {
+  -moz-box-ordinal-group: 1;
+  -webkit-box-ordinal-group: 1;
+  box-ordinal-group: 1;
+  width: 50%;
+}
+
+div.search_result.albums > div.entry > .artist-name {
+  -moz-box-ordinal-group: 2;
+  -webkit-box-ordinal-group: 2;
+  box-ordinal-group: 2;
+  width: 50%;
+}
+
+div.search_result.artists > div.entry > .artist-name {
+  width: 100%;
+}
+
+div.search_result.song > div.entry > .track-name {
+  -moz-box-ordinal-group: 1;
+  -webkit-box-ordinal-group: 1;
+  box-ordinal-group: 1;
+  width: 25%;
+}
+
+div.search_result.song > div.entry > .artist-name {
+  -moz-box-ordinal-group: 2;
+  -webkit-box-ordinal-group: 2;
+  box-ordinal-group: 2;
+  width: 25%;
+}
+
+div.search_result.song > div.entry > .collection-name {
+  -moz-box-ordinal-group: 3;
+  -webkit-box-ordinal-group: 3;
+  box-ordinal-group: 3;
+  width: 25%;
+}
+
+div.search_result.song > div.entry > .track-number {
+  -moz-box-ordinal-group: 4;
+  -webkit-box-ordinal-group: 4;
+  box-ordinal-group: 4;
+  width: 25%;
+}
+
+div.search_result.albums > div.entry > .track-name,
+div.search_result.albums > div.entry > .track-number,
+div.search_result.artists > div.entry > .collection-name,
+div.search_result.artists > div.entry > .track-name,
+div.search_result.artists > div.entry > .track-number {
+  display: none;
 }
 
 /*
@@ -183,8 +245,8 @@ div#loader {
   width: 100%;
   height: 100%;
   background: rgba(255,255,255,.5);
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 79px;
   left: 0;
   z-index: 10;
 }

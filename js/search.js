@@ -1,17 +1,27 @@
 jQuery(function($) {
 
+  var query = null;
+  var search_url = null;
+  var parameters = null;
+  var identifier = null;
+  var entities = null;
+  var attributes = null;
+  var search_data = null;
+  var search = null;
+
   /*
    * Search
    */
   $('.search_form').submit(function(event) {
     event.preventDefault();
 
-    var query = $(".search").val();
-    var search_url = 'https://itunes.apple.com/search';
-    var parameters = $('input[name=parameters]:checked');
-    var entities = parameters.attr('data-entities');
-    var attributes = parameters.attr('data-attributes');
-    var search_data = {
+    query = $(".search").val();
+    search_url = 'https://itunes.apple.com/search';
+    parameters = $('input[name=parameters]:checked');
+    identifier = parameters.attr('id');
+    entities = parameters.attr('data-entities');
+    attributes = parameters.attr('data-attributes');
+    search_data = {
       'term': query,
       'media': 'music',
       'entity': entities,
@@ -19,16 +29,21 @@ jQuery(function($) {
     };
 
     if (query.trim() && query != 'Search') {
-      var search = new iTunesSearchAPI().getResult({
+      search = new iTunesSearchAPI().getResult({
         'url': search_url,
         'data': search_data,
         'resultType': 'search'
       }).formatResult();
+
+      // reset new identifier on table
+      $('.search_result').removeClass().addClass('search_result');
+      $('.search_result').addClass(identifier);
     }
 
     $('input[name=parameters]').change(function() {
       // reset vars
       parameters = $('input[name=parameters]:checked');
+      identifier = parameters.attr('id');
       entities = parameters.attr('data-entities');
       attributes = parameters.attr('data-attributes');
       search_data = {
@@ -39,11 +54,15 @@ jQuery(function($) {
       };
 
       // redo call
-      var search = new iTunesSearchAPI().getResult({
+      search = new iTunesSearchAPI().getResult({
         'url': search_url,
         'data': search_data,
         'resultType': 'search'
       }).formatResult();
+
+      // reset new identifier on table
+      $('.search_result').removeClass().addClass('search_result');
+      $('.search_result').addClass(identifier);
     });
   });
 
@@ -104,8 +123,6 @@ jQuery(function($) {
 
           // display icon
           $('#loader').fadeIn(100);
-          // freeze scroll
-          $('#left').css({ overflow: 'hidden' });
         },
       }).done(function(json) {
         // setting results
@@ -119,8 +136,6 @@ jQuery(function($) {
       }).always(function() {
         // hide loader icon
         $('#loader').hide();
-        // unfreeze scroll
-        $('#left').css({ overflow: 'auto' });
       });
     }
 
@@ -139,55 +154,55 @@ jQuery(function($) {
           $('.search_result').empty();
 
           $.each(self.results, function(key, result) {
-            var li = $('<li></li>').addClass('element_'+key);
-            var entry = $('<div></div>').addClass('entry');
-            entry.attr('data-artist-id', result.artistId);
+
+            var entry = $('<div></div>');
+            entry.addClass('entry');
+            entry.addClass('element_'+key);
+            entry.addClass(result.wrapperType);
 
             // artist name
-            var artistName = $('<a></a>').addClass('artist-name');
-            // artistName.attr('href', result.artistLinkUrl || result.artistViewUrl);
-            artistName.attr('href', 'https://itunes.apple.com/lookup?id='+result.artistId+'&entity=album');
-            artistName.text(result.artistName);
+            var artistName = $('<div></div>').addClass('artist-name');
+            var artistNameAnchor = $('<a></a>');
+            artistNameAnchor.attr('href', 'https://itunes.apple.com/lookup?id='+result.artistId+'&entity=album');
+            artistNameAnchor.text(result.artistName);
+            artistName.append(artistNameAnchor);
 
             // collection name
-            var collectionName = $('<a></a>').addClass('collection-name');
-            collectionName.attr('href', result.collectionViewUrl);
-            collectionName.text(result.collectionName);
+            var collectionName = $('<div></div>').addClass('collection-name');
+            var collectionNameAnchor = $('<a></a>');
+            collectionNameAnchor.attr('href', result.collectionViewUrl);
+            collectionNameAnchor.text(result.collectionName);
+            collectionName.append(collectionNameAnchor);
 
-            entry.append(artistName, collectionName);
+            // track name
+            var trackName = $('<div></div>').addClass('track-name');
+            var trackNameSpan = $('<span></span>');
+            trackNameSpan.text(result.trackName);
+            trackName.append(trackNameSpan);
 
-            var details = $('<div></div>').addClass('details');
-            var track = $('<span></span>').addClass('track');
+            // track number
+            var trackNumber = $('<div></div>').addClass('track-number');
+            var trackNumberSpan = $('<span></span>');
+            trackNumberSpan.text(result.trackNumber+' out of '+result.trackCount);
+            trackNumber.append(trackNumberSpan);
 
-            if (result.trackNumber || result.trackName) {
-              // track number
-              var trackNumber = $('<span></span>').addClass('number');
-              trackNumber.text(result.trackNumber+' out of '+result.trackCount);
+            entry.append(artistName, collectionName, trackName, trackNumber);
+            $('.search_result').append(entry);
 
-              // track name
-              var trackName = $('<span></span>').addClass('name');
-              trackName.text(result.trackName);
-
-              track.append(trackNumber, trackName);
-            }
-
-            // wrapper type
-            var type = $('<span></span>').addClass('type');
-            type.text(result.wrapperType);
-
-            details.append(track, type);
-            li.append(entry, details);
-            $('.search_result').append(li);
           });
           break;
         case 'lookup':
           // close overlays (in case any is open), build album list, open new overlay
           $.each(self.results, function(key, result) {
-            var li = $('<li></li>').addClass('element_'+key);
-            var entry = $('<div></div>').addClass('entry');
+            var entry = $('<div></div>');
+            entry.addClass('entry');
+            entry.addClass('element_'+key);
+            entry.addClass(result.wrapperType);
 
-            li.append(entry);
-            $('.search_result').append(li);
+            var something = $('<div></div>').addClass('something');
+
+            entry.append(something);
+            $('.search_result').append(entry);
           });
           break;
       }
