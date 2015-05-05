@@ -3,11 +3,17 @@ jQuery(function($) {
   var query = null;
   var search_url = null;
   var parameters = null;
-  var identifier = null;
+  var search_identifier = null;
   var entities = null;
   var attributes = null;
   var search_data = null;
   var search = null;
+  var lookup_url = null;
+  var lookup_identifier = null;
+  var id = null;
+  var entity = null;
+  var lookup_data = null;
+  var lookup = null;
 
   /*
    * Search
@@ -18,7 +24,7 @@ jQuery(function($) {
     query = $(".search").val();
     search_url = 'https://itunes.apple.com/search';
     parameters = $('input[name=parameters]:checked');
-    identifier = parameters.attr('id');
+    search_identifier = parameters.attr('id');
     entities = parameters.attr('data-entities');
     attributes = parameters.attr('data-attributes');
     search_data = {
@@ -35,15 +41,15 @@ jQuery(function($) {
         'resultType': 'search'
       }).formatResult();
 
-      // reset new identifier on table
-      $('.search_result').removeClass().addClass('search_result');
-      $('.search_result').addClass(identifier);
+      // reset new search identifier on column
+      $('.search_result').removeClass().addClass('search_result list');
+      $('.search_result').addClass(search_identifier);
     }
 
     $('input[name=parameters]').change(function() {
       // reset vars
       parameters = $('input[name=parameters]:checked');
-      identifier = parameters.attr('id');
+      search_identifier = parameters.attr('id');
       entities = parameters.attr('data-entities');
       attributes = parameters.attr('data-attributes');
       search_data = {
@@ -60,20 +66,56 @@ jQuery(function($) {
         'resultType': 'search'
       }).formatResult();
 
-      // reset new identifier on table
-      $('.search_result').removeClass().addClass('search_result');
-      $('.search_result').addClass(identifier);
+      // reset new search identifier on column
+      $('.search_result').removeClass().addClass('search_result list');
+      $('.search_result').addClass(search_identifier);
     });
   });
 
   /*
    * Lookup
    */
-  // var lookup_url = 'https://itunes.apple.com/lookup';
-  // var lookup_data = {
-  //   'id' : 909253,
-  //   'entity' : 'album'
-  // };
+  $('.search_result').on('click', '.anchor', function () {
+    event.preventDefault();
+
+    // {
+    //   'song': {
+    //     'https://itunes.apple.com/lookup?id=974187298'
+    //   },
+    //   'collection': {
+    //     'https://itunes.apple.com/lookup?id=974187289',
+    //     'https://itunes.apple.com/lookup?id=974187289&entity=album'
+    //   },
+    //   'collection & tracks': {
+    //     'https://itunes.apple.com/lookup?id=974187289&entity=song'
+    //   },
+    //   'artist': {
+    //     'https://itunes.apple.com/lookup?id=368183298'
+    //   },
+    //   'artist & collections': {
+    //     'https://itunes.apple.com/lookup?id=368183298&entity=album'
+    //   },
+    // }
+
+    lookup_url = 'https://itunes.apple.com/lookup';
+    lookup_identifier = $(this).parent().attr('class');
+    id = $(this).attr('data-id');
+    entity = $(this).attr('data-entity');
+    lookup_data = {
+      'id' : id,
+      'entity' : entity
+    };
+
+    lookup = new iTunesSearchAPI().getResult({
+      'url': lookup_url,
+      'data': lookup_data,
+      'resultType': 'lookup'
+    }).formatResult();
+
+    // reset new lookup identifier on column
+    $('.lookup_result').removeClass().addClass('lookup_result list');
+    $('.lookup_result').addClass(lookup_identifier);
+  });
 
   /*
    * Classes & Methods
@@ -101,6 +143,15 @@ jQuery(function($) {
       $.extend(config, settings);
       self.settings = config;
 
+      switch (self.settings.resultType) {
+        case 'search':
+          var element = $('#left');
+          break;
+        case 'lookup':
+          var element = $('#right');
+          break;
+      }
+
       window.resultCall = $.ajax({
         type: config.type,
         url: config.url,
@@ -108,21 +159,28 @@ jQuery(function($) {
         dataType: config.dataType,
         data: config.data,
         beforeSend: function(xhr) {
-          // get loading icon
-          var dom_ajax_loader = $('.loader_icon');
+          var dom_ajax_loader = element.find('.loader > img');
 
-          // create new offscreen image
+          // create and place new offscreen image
           var ajax_loader = new Image();
           ajax_loader.src = dom_ajax_loader.attr('src');
 
-          // place loader icon screen center
           dom_ajax_loader.css({
-            left: (($('#left').width() - ajax_loader.width) / 2),
-            top: (($('#left').height() - ajax_loader.height) / 2)
+            left: ((element.width() - ajax_loader.width) / 2),
+            top: ((element.height() - ajax_loader.height) / 2)
           });
 
-          // display icon
-          $('#loader').fadeIn(100);
+          element.find('.loader').css({
+            top: element.find('.list').position().top
+          });
+
+          // freeze column loader
+          element.css({
+            overflow: 'hidden'
+          });
+
+          // display loader
+          element.find('.loader').fadeIn(100);
         },
       }).done(function(json) {
         // setting results
@@ -134,8 +192,13 @@ jQuery(function($) {
           'status': textStatus
         };
       }).always(function() {
-        // hide loader icon
-        $('#loader').hide();
+        // hide loader
+        $('.loader').hide();
+
+        // unfreeze column scroll
+        element.css({
+          overflow: 'auto'
+        });
       });
     }
 
@@ -161,29 +224,39 @@ jQuery(function($) {
             entry.addClass(result.wrapperType);
 
             // artist name
-            var artistName = $('<div></div>').addClass('artist-name');
-            var artistNameAnchor = $('<a></a>');
-            artistNameAnchor.attr('href', 'https://itunes.apple.com/lookup?id='+result.artistId+'&entity=album');
+            var artistName = $('<div></div>').addClass('artist');
+            var artistNameAnchor = $('<a href="#"></a>');
+            artistNameAnchor.addClass('anchor');
+            artistNameAnchor.attr('data-id', result.artistId);
+            artistNameAnchor.attr('data-entity', 'album');
             artistNameAnchor.text(result.artistName);
             artistName.append(artistNameAnchor);
 
             // collection name
-            var collectionName = $('<div></div>').addClass('collection-name');
-            var collectionNameAnchor = $('<a></a>');
-            collectionNameAnchor.attr('href', result.collectionViewUrl);
+            var collectionName = $('<div></div>').addClass('collection');
+            var collectionNameAnchor = $('<a href="#"></a>');
+            collectionNameAnchor.addClass('anchor');
+            collectionNameAnchor.attr('data-id', result.collectionId);
+            collectionNameAnchor.attr('data-entity', 'song');
             collectionNameAnchor.text(result.collectionName);
             collectionName.append(collectionNameAnchor);
 
             // track name
-            var trackName = $('<div></div>').addClass('track-name');
-            var trackNameSpan = $('<span></span>');
-            trackNameSpan.text(result.trackName);
-            trackName.append(trackNameSpan);
+            var trackName = $('<div></div>').addClass('track');
+            var trackNameAnchor = $('<a href="#"></a>');
+            trackNameAnchor.addClass('anchor');
+            trackNameAnchor.attr('data-id', result.trackId);
+            trackNameAnchor.attr('data-entity', '');
+            trackNameAnchor.text(result.trackName);
+            trackName.append(trackNameAnchor);
 
             // track number
             var trackNumber = $('<div></div>').addClass('track-number');
             var trackNumberSpan = $('<span></span>');
-            trackNumberSpan.text(result.trackNumber+' out of '+result.trackCount);
+            trackNumberSpan.text(result.trackNumber);
+            if (result.trackCount) {
+              trackNumberSpan.append(document.createTextNode(' out of '+result.trackCount));
+            }
             trackNumber.append(trackNumberSpan);
 
             entry.append(artistName, collectionName, trackName, trackNumber);
@@ -192,17 +265,55 @@ jQuery(function($) {
           });
           break;
         case 'lookup':
-          // close overlays (in case any is open), build album list, open new overlay
+          $('.lookup_result').empty();
+
           $.each(self.results, function(key, result) {
+
             var entry = $('<div></div>');
             entry.addClass('entry');
             entry.addClass('element_'+key);
             entry.addClass(result.wrapperType);
 
-            var something = $('<div></div>').addClass('something');
+            // artwork
+            if (result.artworkUrl100) {
+              var artworkContainer = $('<div></div>').addClass('artwork');
+              var artworkImg = $('<img />').addClass('artwork-img');
+              var artworkUrl100 = result.artworkUrl100;
+              var artworkUrl350 = artworkUrl100.replace(/\.[0-9]{3}x[0-9]{3}\-[0-9]{2,3}\.jpg$/i, '.350x350.jpg');
+              artworkImg.attr('src', artworkUrl350);
+              artworkContainer.append(artworkImg);
+            }
 
-            entry.append(something);
-            $('.search_result').append(entry);
+            // artist name
+            if (result.artistName) {
+              var artistName = $('<div></div>').addClass('artist');
+              artistName.text(result.artistName);
+            }
+
+            // collection name
+            if (result.collectionName) {
+              var collectionName = $('<div></div>').addClass('collection');
+              collectionName.text(result.collectionName);
+            }
+
+            // track name
+            if (result.trackName) {
+              var trackName = $('<div></div>').addClass('track');;
+              trackName.text(result.trackName);
+            }
+
+            // track number
+            if (result.trackNumber) {
+              var trackNumber = $('<div></div>').addClass('track-number');
+              var trackNumberSpan = $('<span></span>');
+              trackNumberSpan.text(result.trackNumber);
+              if (result.trackCount)
+                trackNumberSpan.append(document.createTextNode(' out of '+result.trackCount));
+              trackNumber.append(trackNumberSpan);
+            }
+
+            entry.append(artworkContainer, artistName, collectionName, trackNumber, trackName);
+            $('.lookup_result').append(entry);
           });
           break;
       }
