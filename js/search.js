@@ -171,7 +171,7 @@ jQuery(function($) {
           });
 
           element.find('.loader').css({
-            top: element.find('.list').position().top
+            top: -(element.find('.list').position().top)
           });
 
           // freeze column loader
@@ -214,7 +214,7 @@ jQuery(function($) {
 
       switch (self.settings.resultType) {
         case 'search':
-          $('.search_result').empty();
+          $('.search_result > .entry').remove();
 
           $.each(self.results, function(key, result) {
 
@@ -254,9 +254,10 @@ jQuery(function($) {
             var trackNumber = $('<div></div>').addClass('track-number');
             var trackNumberSpan = $('<span></span>');
             trackNumberSpan.text(result.trackNumber);
-            if (result.trackCount) {
-              trackNumberSpan.append(document.createTextNode(' out of '+result.trackCount));
+            if (result.trackNumber && result.trackCount) {
+              trackNumberSpan.append(document.createTextNode(' out of '));
             }
+            trackNumberSpan.append(document.createTextNode(result.trackCount));
             trackNumber.append(trackNumberSpan);
 
             entry.append(artistName, collectionName, trackName, trackNumber);

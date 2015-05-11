@@ -155,8 +155,21 @@ div.search_result {
   z-index: 5;
 }
 
+div#list_header {
+  background: rgb(130, 130, 130);
+  position: fixed;
+  width: 462px;
+  height: 24px;
+}
+
+div.search_result > div.element_0 {
+  padding-top: 24px;
+}
+
+div.search_result > div#list_header,
+div.search_result > div#list_header > div,
 div.search_result > div.entry,
-div.search_result >.entry > div {
+div.search_result > div.entry > div {
   display: -moz-box;
   display: -webkit-box;
   display: box;
@@ -201,6 +214,10 @@ div.artwork img:hover {
 /*
  * Columns
  */
+div.search_result.all > div#list_header > .artist,
+div.search_result.all > div#list_header > .collection,
+div.search_result.all > div#list_header > .track,
+div.search_result.all > div#list_header > .track-number,
 div.search_result.all > div.entry > .artist,
 div.search_result.all > div.entry > .collection,
 div.search_result.all > div.entry > .track,
@@ -208,6 +225,7 @@ div.search_result.all > div.entry > .track-number {
   width: 25%;
 }
 
+div.search_result.albums > div#list_header > .collection,
 div.search_result.albums > div.entry > .collection {
   -moz-box-ordinal-group: 1;
   -webkit-box-ordinal-group: 1;
@@ -215,6 +233,7 @@ div.search_result.albums > div.entry > .collection {
   width: 50%;
 }
 
+div.search_result.albums > div#list_header > .artist,
 div.search_result.albums > div.entry > .artist {
   -moz-box-ordinal-group: 2;
   -webkit-box-ordinal-group: 2;
@@ -222,10 +241,12 @@ div.search_result.albums > div.entry > .artist {
   width: 50%;
 }
 
+div.search_result.artists > div#list_header > .artist,
 div.search_result.artists > div.entry > .artist {
   width: 100%;
 }
 
+div.search_result.song > div#list_header > .track,
 div.search_result.song > div.entry > .track {
   -moz-box-ordinal-group: 1;
   -webkit-box-ordinal-group: 1;
@@ -233,6 +254,7 @@ div.search_result.song > div.entry > .track {
   width: 25%;
 }
 
+div.search_result.song > div#list_header > .artist,
 div.search_result.song > div.entry > .artist {
   -moz-box-ordinal-group: 2;
   -webkit-box-ordinal-group: 2;
@@ -240,6 +262,7 @@ div.search_result.song > div.entry > .artist {
   width: 25%;
 }
 
+div.search_result.song > div#list_header > .collection,
 div.search_result.song > div.entry > .collection {
   -moz-box-ordinal-group: 3;
   -webkit-box-ordinal-group: 3;
@@ -247,6 +270,7 @@ div.search_result.song > div.entry > .collection {
   width: 25%;
 }
 
+div.search_result.song > div#list_header > .track-number,
 div.search_result.song > div.entry > .track-number {
   -moz-box-ordinal-group: 4;
   -webkit-box-ordinal-group: 4;
@@ -254,6 +278,14 @@ div.search_result.song > div.entry > .track-number {
   width: 25%;
 }
 
+div.search_result.albums > div#list_header > .track,
+div.search_result.albums > div#list_header > .track-number,
+div.search_result.artists > div#list_header > .collection,
+div.search_result.artists > div#list_header > .track,
+div.search_result.artists > div#list_header > .track-number,
+div.lookup_result.collection > div#list_header > .artwork,
+div.lookup_result.collection > div#list_header > .artist,
+div.lookup_result.collection > div#list_header > .collection,
 div.search_result.albums > div.entry > .track,
 div.search_result.albums > div.entry > .track-number,
 div.search_result.artists > div.entry > .collection,
