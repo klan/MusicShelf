@@ -2,8 +2,6 @@ jQuery(function($) {
 
   var query = null;
   var search_url = null;
-  var parameters = null;
-  var search_identifier = null;
   var entities = null;
   var attributes = null;
   var search_data = null;
@@ -14,6 +12,11 @@ jQuery(function($) {
   var entity = null;
   var lookup_data = null;
   var lookup = null;
+
+  // set search identifier on column
+  var parameters = $('input[name=parameters]:checked');
+  var search_identifier = parameters.attr('id');
+  $('.search_result').addClass(search_identifier);
 
   /*
    * Search
@@ -278,10 +281,22 @@ jQuery(function($) {
             // artwork
             if (result.artworkUrl100) {
               var artworkContainer = $('<div></div>').addClass('artwork');
-              var artworkImg = $('<img />').addClass('artwork-img');
+              var artworkImg = new Image();
+              // var artworkImg = document.createElement('img');
               var artworkUrl100 = result.artworkUrl100;
               var artworkUrl350 = artworkUrl100.replace(/\.[0-9]{3}x[0-9]{3}\-[0-9]{2,3}\.jpg$/i, '.350x350.jpg');
-              artworkImg.attr('src', artworkUrl350);
+              artworkImg.src = artworkUrl350;
+              artworkImg.crossOrigin = 'Anonymous';
+              artworkImg.onload = function() {
+                $(this).addClass('artwork-img');
+
+                var colorThief = new ColorThief();
+                var artworkColor = colorThief.getColor(artworkImg);
+
+                artworkContainer.css({
+                  'border' : '4px solid rgb('+artworkColor[0]+','+artworkColor[1]+','+artworkColor[2]+')'
+                })
+              };
               artworkContainer.append(artworkImg);
             }
 

@@ -2,11 +2,16 @@ jQuery(function($) {
 
   // setting vars
   var left = $('#left');
+  var listHeader = $('#list_header');
   var right = $('#right');
   var windowWidth = $(window).width();
 
   // setting init style
   left.css({
+    'width': (windowWidth / 2) < 350 ? 350 : windowWidth / 2,
+    'max-width': (windowWidth - 350) < 350 ? 350 : windowWidth - 350
+  });
+  listHeader.css({
     'width': (windowWidth / 2) < 350 ? 350 : windowWidth / 2,
     'max-width': (windowWidth - 350) < 350 ? 350 : windowWidth - 350
   });
@@ -20,7 +25,11 @@ jQuery(function($) {
     windowWidth = $(window).width();
 
     left.css({
-      'width':  (windowWidth - right.width()) < 350 ? 350 : windowWidth - right.width(),
+      'width': (windowWidth - right.width()) < 350 ? 350 : windowWidth - right.width(),
+      'max-width': (windowWidth - 350) < 350 ? 350 : windowWidth - 350
+    });
+    listHeader.css({
+      'width': (windowWidth - right.width()) < 350 ? 350 : windowWidth - right.width(),
       'max-width': (windowWidth - 350) < 350 ? 350 : windowWidth - 350
     });
     right.css({
@@ -33,6 +42,12 @@ jQuery(function($) {
       event.preventDefault();
 
       left.css({
+        // limiting to min and max width
+        'width':  event.pageX < 350 ? 350 :
+                  event.pageX > (windowWidth - 350) ? windowWidth - 350 :
+                  event.pageX
+      });
+      listHeader.css({
         // limiting to min and max width
         'width':  event.pageX < 350 ? 350 :
                   event.pageX > (windowWidth - 350) ? windowWidth - 350 :
