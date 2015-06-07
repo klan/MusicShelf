@@ -118,7 +118,7 @@ div.search_parameters label {
 div#left,
 div#right {
   position: absolute;
-  top: 79px;
+  top: 77px;
   bottom: 0;
   overflow: auto;
 }
@@ -190,30 +190,38 @@ div.search_result > div.entry span {
 /*
  * Lookup results
  */
-div.artwork,
-div.artwork > img {
+div.lookup_result > div.entry > div:not(.inner) {
+  position: relative;
+  z-index: 1;
+}
+
+div.lookup_result > div.entry > div.artwork,
+div.lookup_result > div.entry > div.artwork > img {
   -webkit-transition: all 0.5s;
      -moz-transition: all 0.5s;
           transition: all 0.5s;
 }
 
-div.artwork {
+div.lookup_result > div.entry > div.artwork {
   height: 200px;
+  border: 2px solid rgb(140, 140, 140);
   overflow: hidden;
   -webkit-filter: grayscale(100%);
      -moz-filter: grayscale(100%);
           filter: grayscale(100%);
 }
 
-div.artwork:hover {
+div.lookup_result.collection:hover > div.entry > div.artwork,
+div.lookup_result > div.entry:hover > div.artwork {
   -webkit-filter: grayscale(0%);
      -moz-filter: grayscale(0%);
           filter: grayscale(0%);
 }
 
-div.artwork > img {
+div.lookup_result > div.entry > div.artwork > img {
   width: 100%;
-  margin-top: -25%;
+  /*margin-top: -30%;*/
+  margin-top: -20%;
   -webkit-filter: blur(5px);
      -moz-filter: blur(5px);
           filter: blur(5px);
@@ -291,17 +299,14 @@ div.search_result.albums > div#list_header > .track-number,
 div.search_result.artists > div#list_header > .collection,
 div.search_result.artists > div#list_header > .track,
 div.search_result.artists > div#list_header > .track-number,
-div.lookup_result.collection > div#list_header > .artwork,
-div.lookup_result.collection > div#list_header > .artist,
-div.lookup_result.collection > div#list_header > .collection,
 div.search_result.albums > div.entry > .track,
 div.search_result.albums > div.entry > .track-number,
 div.search_result.artists > div.entry > .collection,
 div.search_result.artists > div.entry > .track,
 div.search_result.artists > div.entry > .track-number,
-div.lookup_result.collection > div.track > .artwork,
-div.lookup_result.collection > div.track > .artist,
-div.lookup_result.collection > div.track > .collection {
+div.lookup_result.collection > div.track .artwork,
+div.lookup_result.collection > div.track .artist,
+div.lookup_result.collection > div.track .collection {
   display: none;
 }
 
