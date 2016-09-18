@@ -278,11 +278,40 @@ jQuery(function($) {
             entry.addClass('element_'+key);
             entry.addClass(result.wrapperType);
 
+            // switch for adding inner/drop elements w/ classes
+            // to selectable hover-drop elements
+            switch (result.wrapperType) {
+              case 'collection':
+                if ($('.lookup_result').is('.artist')) {
+                  var drop = $('<div></div>');
+                  drop.addClass('drop-child');
+                  entry.addClass('drop-parent');
+                }
+                break;
+              case 'artist':
+                if ($('.lookup_result').is('.collection')) {
+                  var drop = $('<div></div>');
+                  drop.addClass('drop-child');
+                  entry.addClass('drop-parent');
+                }
+                break;
+              case 'track':
+                if ($('.lookup_result').is('.artist, .collection')) {
+                  var drop = $('<div></div>');
+                  drop.addClass('drop-child');
+                  entry.addClass('drop-parent');
+                }
+                break;
+            }
+
+            // inner
+            var inner = $('<div></div>');
+            inner.addClass('inner');
+
             // artwork
             if (result.artworkUrl100) {
               var artworkContainer = $('<div></div>').addClass('artwork');
               var artworkImg = new Image();
-              // var artworkImg = document.createElement('img');
               var artworkUrl100 = result.artworkUrl100;
               var artworkUrl350 = artworkUrl100.replace(/\.[0-9]{3}x[0-9]{3}\-[0-9]{2,3}\.jpg$/i, '.350x350.jpg');
               artworkImg.src = artworkUrl350;
@@ -294,7 +323,7 @@ jQuery(function($) {
                 var artworkColor = colorThief.getColor(artworkImg);
 
                 artworkContainer.css({
-                  'border' : '4px solid rgb('+artworkColor[0]+','+artworkColor[1]+','+artworkColor[2]+')'
+                  'border' : '2px solid rgb('+artworkColor[0]+','+artworkColor[1]+','+artworkColor[2]+')'
                 })
               };
               artworkContainer.append(artworkImg);
@@ -328,7 +357,8 @@ jQuery(function($) {
               trackNumber.append(trackNumberSpan);
             }
 
-            entry.append(artworkContainer, artistName, collectionName, trackNumber, trackName);
+            inner.append(artworkContainer, artistName, collectionName, trackNumber, trackName);
+            entry.append(inner, drop);
             $('.lookup_result').append(entry);
           });
           break;
